@@ -1,24 +1,26 @@
 import styles from './Product.module.scss';
 import ProductForm from '../ProductForm/ProductForm';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ProductImage from '../ProductImage/ProductImage';
 import shortid from 'shortid';
+import PropTypes from 'prop-types';
 
 const Product = props => {
 
   const [currentColor, setCurrentColor] = useState(props.colors[0]);
   const [currentSize, setCurrentSize] = useState(props.sizes[0].name);
 
-  const getPrice = () => { 
+  const getPrice = useMemo(() => {
     return (props.basePrice + props.sizes.find((size) => currentSize === size.name).additionalPrice);
-  };
+  }, [props.basePrice, props.sizes, currentSize]);
+  
 
   const addToCart = event => {
     event.preventDefault();
     console.log('Summary');
     console.log('==========');
     console.log('Name: ', props.title);
-    console.log('Price: ', getPrice());
+    console.log('Price: ', getPrice), '$';
     console.log(currentSize);
     console.log(currentColor);
   }
@@ -29,7 +31,7 @@ const Product = props => {
       <div>
         <header>
           <h2 className={styles.name}>{props.title}</h2>
-          <span className={styles.price}>Price: {getPrice()}$</span>
+          <span className={styles.price}>Price: {getPrice} $</span>
         </header>
         <ProductForm
           key={shortid()} 
@@ -44,6 +46,15 @@ const Product = props => {
       </div>
     </article>
   );
+};
+
+Product.propTypes = {
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  basePrice: PropTypes.number.isRequired,
+  colors: PropTypes.array.isRequired,
+  sizes: PropTypes.array.isRequired
 };
 
 export default Product;

@@ -16,5 +16,4 @@ const OptionColor = props => {
           </div>
     );
 };
-
 export default OptionColor;
